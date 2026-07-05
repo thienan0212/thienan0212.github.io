@@ -68,7 +68,7 @@
             font-size: 36px;
             font-weight: 800;
             letter-spacing: -1px;
-            color: #FFFFFF; /* Đổi sang màu solid thuần để mượt hơn gradient khi render nhanh */
+            color: #FFFFFF;
             margin-bottom: 8px;
         }
 
@@ -86,10 +86,7 @@
             gap: 14px;
         }
 
-        /* 
-           BẢN NÂNG CẤP SIÊU MƯỢT: 
-           Ép GPU luôn chạy và phản hồi hoạt họa ngay lập tức kể cả khi lướt chuột nhanh
-        */
+        /* Trạng thái mặc định của nút */
         .link-item {
             display: flex;
             align-items: center;
@@ -102,59 +99,50 @@
             font-size: 15px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            
-            /* Kích hoạt tăng tốc phần cứng 3D lập tức */
             transform: translate3d(0, 0, 0); 
-            -webkit-transform: translate3d(0, 0, 0);
-            
-            /* Báo trước cho trình duyệt chuẩn bị tài nguyên thay đổi */
-            will-change: transform, background-color, border-color, box-shadow; 
-            
-            /* Thời gian phản hồi nhanh hơn (0.18s) giúp nhận diện di chuột tức thì */
-            transition: transform 0.18s cubic-bezier(0.215, 0.610, 0.355, 1), 
-                        background-color 0.18s linear, 
-                        border-color 0.18s linear, 
-                        box-shadow 0.18s linear;
+            will-change: transform, background-color, border-color, box-shadow;
+            /* Đổi sang 0.1s để màu sắc bắt kịp tốc độ chuột ngay khi đến gần */
+            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background-color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
         }
 
-        /* Hiệu ứng Hover phản hồi lập tức */
-        .link-item.gmail:hover {
-            background-color: #EA4335;
-            border-color: #EA4335;
+        /* 
+           Các Class kích hoạt bằng JavaScript khi chuột đến gần.
+           Màu sắc sẽ tự động kích hoạt dù chuột chưa chạm vào phần tử!
+        */
+        .link-item.near.gmail {
+            background-color: #EA4335 !important;
+            border-color: #EA4335 !important;
             transform: translate3d(0, -3px, 0);
-            box-shadow: 0 10px 20px rgba(234, 67, 53, 0.25);
+            box-shadow: 0 8px 16px rgba(234, 67, 53, 0.3);
         }
 
-        .link-item.youtube:hover {
-            background-color: #FF0000;
-            border-color: #FF0000;
+        .link-item.near.youtube {
+            background-color: #FF0000 !important;
+            border-color: #FF0000 !important;
             transform: translate3d(0, -3px, 0);
-            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.25);
+            box-shadow: 0 8px 16px rgba(255, 0, 0, 0.3);
         }
 
-        .link-item.tiktok:hover {
-            background-color: #010101;
-            border-color: #25F4EE;
+        .link-item.near.tiktok {
+            background-color: #010101 !important;
+            border-color: #25F4EE !important;
             transform: translate3d(0, -3px, 0);
-            box-shadow: 0 10px 20px rgba(37, 244, 238, 0.15);
+            box-shadow: 0 8px 16px rgba(37, 244, 238, 0.2);
         }
 
-        .link-item.discord:hover {
-            background-color: #5865F2;
-            border-color: #5865F2;
+        .link-item.near.discord {
+            background-color: #5865F2 !important;
+            border-color: #5865F2 !important;
             transform: translate3d(0, -3px, 0);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.25);
+            box-shadow: 0 8px 16px rgba(88, 101, 242, 0.3);
         }
 
-        .link-item.discord-team {
-            border-color: rgba(88, 101, 242, 0.2);
-        }
-
-        .link-item.discord-team:hover {
-            background: linear-gradient(135deg, #5865F2, #7289DA);
-            border-color: #5865F2;
+        .link-item.near.discord-team {
+            background: linear-gradient(135deg, #5865F2, #7289DA) !important;
+            border-color: #5865F2 !important;
             transform: translate3d(0, -3px, 0);
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
+            box-shadow: 0 8px 16px rgba(88, 101, 242, 0.35);
         }
     </style>
 </head>
@@ -179,5 +167,36 @@
         </div>
     </div>
 
+    <!-- Đoạn mã JavaScript xử lý khoảng cách tiệm cận của chuột -->
+    <script>
+        const items = document.querySelectorAll('.link-item');
+        // Khoảng cách kích hoạt (tính bằng pixel). Chuột cách nút dưới 60px là nút tự đổi màu.
+        const triggerDistance = 60; 
+
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                
+                // Tìm điểm gần nhất trên cạnh của nút bấm tới con trỏ chuột
+                const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
+                const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
+                
+                // Tính khoảng cách hình học từ chuột đến điểm đó
+                const distanceX = mouseX - closestX;
+                const distanceY = mouseY - closestY;
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                // Nếu chuột nằm trong phạm vi gần, thêm class 'near' để kích hoạt đổi màu
+                if (distance < triggerDistance) {
+                    item.classList.add('near');
+                } else {
+                    item.classList.remove('near');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
