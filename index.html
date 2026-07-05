@@ -113,22 +113,39 @@
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Hiệu ứng di chuột tinh tế */
-        .link-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+        /* Hiệu ứng di chuột đổi màu theo thương hiệu */
+        .link-item.gmail:hover {
+            background: #EA4335;
+            border-color: #EA4335;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(234, 67, 53, 0.3);
         }
 
-        /* Điểm nhấn màu sắc tối giản cho icon/chữ nếu cần (tùy chọn) */
-        .link-item.primary {
-            background: #FFFFFF;
-            color: #0B0F19;
-        }
-        
-        .link-item.primary:hover {
-            background: #E5E7EB;
+        .link-item.youtube:hover {
+            background: #FF0000;
+            border-color: #FF0000;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .link-item.discord:hover {
+            background: #5865F2;
+            border-color: #5865F2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+        }
+
+        /* Nút Discord Team nổi bật với hiệu ứng gradient */
+        .link-item.discord-team {
+            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(114, 137, 218, 0.1));
+            border-color: rgba(88, 101, 242, 0.3);
+        }
+
+        .link-item.discord-team:hover {
+            background: linear-gradient(135deg, #5865F2, #7289DA);
+            border-color: #5865F2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
         }
     </style>
 </head>
@@ -144,16 +161,20 @@
         <!-- Tên định danh to và chuyên nghiệp -->
         <h1 class="username">thienan0212</h1>
         
-        <p class="tagline">Developer & Content Creator</p>
+        <p class="tagline">Welcome to my profile</p>
         
         <div class="links-container">
-            <!-- Nút nổi bật nhất -->
-            <a href="https://facebook.com" target="_blank" class="link-item primary">Kết nối qua Facebook</a>
+            <!-- Nút liên kết Gmail -->
+            <a href="mailto:gmail-cua-ban@gmail.com" class="link-item gmail">Gmail</a>
             
-            <!-- Các nút mạng xã hội khác -->
-            <a href="https://tiktok.com" target="_blank" class="link-item">Theo dõi trên TikTok</a>
-            <a href="https://zalo.me" target="_blank" class="link-item">Trò chuyện qua Zalo</a>
-            <a href="https://github.com" target="_blank" class="link-item">Khám phá GitHub</a>
+            <!-- Nút liên kết YouTube -->
+            <a href="https://youtube.com" target="_blank" class="link-item youtube">YouTube</a>
+            
+            <!-- Nút liên kết Discord Cá Nhân -->
+            <a href="https://discord.gg" target="_blank" class="link-item discord">Discord Cá Nhân</a>
+
+            <!-- Nút liên kết Discord Team -->
+            <a href="https://discord.gg" target="_blank" class="link-item discord-team">Discord Team</a>
         </div>
     </div>
 
