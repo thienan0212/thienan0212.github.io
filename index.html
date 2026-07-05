@@ -1,1 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>thienan0212 - Profile</title>
+    <!-- Nhúng font chữ chuyên nghiệp từ Google Fonts -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B0F19; /* Nền tối sang trọng */
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #F3F4F6;
+            padding: 20px;
+        }
+
+        /* Khung chứa nội dung tinh giản kính mờ (Glassmorphism) */
+        .profile-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Ảnh đại diện tối giản */
+        .avatar-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 24px auto;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Điểm xanh hiển thị trạng thái trực tuyến */
+        .status-dot {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            background-color: #10B981;
+            border: 3px solid #0B0F19;
+            border-radius: 50%;
+        }
+
+        /* Chữ thienan0212 To, Đậm, Phông Đẹp */
+        .username {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #FFFFFF 30%, #9CA3AF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #9CA3AF;
+            font-weight: 400;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Khu vực các nút liên kết */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #FFFFFF;
+            font-weight: 600;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Hiệu ứng di chuột tinh tế */
+        .link-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Điểm nhấn màu sắc tối giản cho icon/chữ nếu cần (tùy chọn) */
+        .link-item.primary {
+            background: #FFFFFF;
+            color: #0B0F19;
+        }
+        
+        .link-item.primary:hover {
+            background: #E5E7EB;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <div class="avatar-wrapper">
+            <!-- Thay đường link ảnh chân dung của bạn vào đây -->
+            <img class="avatar" src="https://placeholder.com" alt="thienan0212">
+            <div class="status-dot"></div>
+        </div>
+        
+        <!-- Tên định danh to và chuyên nghiệp -->
+        <h1 class="username">thienan0212</h1>
+        
+        <p class="tagline">Developer & Content Creator</p>
+        
+        <div class="links-container">
+            <!-- Nút nổi bật nhất -->
+            <a href="https://facebook.com" target="_blank" class="link-item primary">Kết nối qua Facebook</a>
+            
+            <!-- Các nút mạng xã hội khác -->
+            <a href="https://tiktok.com" target="_blank" class="link-item">Theo dõi trên TikTok</a>
+            <a href="https://zalo.me" target="_blank" class="link-item">Trò chuyện qua Zalo</a>
+            <a href="https://github.com" target="_blank" class="link-item">Khám phá GitHub</a>
+        </div>
+    </div>
+
+</body>
+</html>
