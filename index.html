@@ -35,7 +35,7 @@
 
         /* 
            LUỒNG ÁNH SÁNG THEO CHUỘT (SPOTLIGHT) 
-           Tối ưu bằng translate3d + transition 0.1s siêu mượt, hỗ trợ motion blur khi vẩy nhanh
+           Delay chuẩn 0.1s + Tự động thêm hiệu ứng Blur đồ họa khi di chuyển
         */
         .mouse-light {
             position: fixed;
@@ -47,31 +47,32 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
-            /* Điểm mấu chốt: Khóa tâm và bật tăng tốc phần cứng */
             transform: translate3d(-50%, -50%, 0);
-            will-change: transform;
-            /* Delay chuẩn 0.1s mượt mà, không bị lag giật nhảy vị trí */
-            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform, filter;
+            /* Delay chuẩn 0.1s */
+            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), filter 0.05s ease-out;
         }
 
-        /* CON TRỎ CHUỘT DẤU CHẤM CÓ MOTION BLUR */
+        /* 
+           CON TRỎ CHUỘT DẤU CHẤM CÓ MOTION BLUR ĐÍNH THỰC
+        */
         .custom-cursor {
             position: fixed;
             top: 0;
             left: 0;
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             background-color: #FFFFFF;
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate3d(-50%, -50%, 0);
-            will-change: transform;
-            /* Phản hồi tức thì nhưng mượt để tạo vệt dãn khi di chuyển nhanh */
-            transition: transform 0.05s ease-out;
+            will-change: transform, filter;
+            /* Phản hồi siêu tốc và làm mượt hiệu ứng mờ nhòe */
+            transition: transform 0.03s ease-out, filter 0.03s ease-out;
         }
 
-        /* Khung chứa nội dung màu xám tối phối viền tinh tế */
+        /* Khung chứa nội dung */
         .profile-card {
             background: #16171C;
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -158,7 +159,7 @@
                         -webkit-backdrop-filter 0.2s ease;
         }
 
-        /* Hiệu ứng tiệm cận kính mờ (Blur) */
+        /* Hiệu ứng tiệm cận kính mờ (Blur) của nút */
         .link-item.near {
             background-color: rgba(255, 255, 255, 0.15) !important;
             border-color: rgba(255, 255, 255, 0.25) !important;
@@ -174,7 +175,6 @@
 </head>
 <body>
 
-    <!-- Các lớp ánh sáng và con trỏ -->
     <div class="mouse-light" id="mouseLight"></div>
     <div class="custom-cursor" id="customCursor"></div>
 
@@ -205,30 +205,45 @@
 
         let lastX = 0;
         let lastY = 0;
+        let blurTimeout;
 
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
             const mouseY = e.clientY;
 
-            // Thuật toán đo tốc độ chuột để kích hoạt hiệu ứng Motion Blur vật lý
+            // Tính toán tốc độ di chuyển thực tế (pixel / frame)
             const deltaX = mouseX - lastX;
             const deltaY = mouseY - lastY;
             const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             
-            // Tính góc di chuyển của chuột
             const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
             
-            // Ép độ dãn (scale) dựa trên tốc độ vẩy chuột, giới hạn tối đa dãn gấp 2.5 lần
-            const stretch = Math.min(1 + speed / 40, 2.5); 
+            // 1. ÉP CO DÃN VẬT LÝ THEO TỐC ĐỘ CHUỘT
+            const stretch = Math.min(1 + speed / 25, 3.5); 
 
-            // 1. Cập nhật vị trí dấu chấm chuột kèm hiệu ứng co dãn Motion Blur theo hướng đi
+            // 2. ÉP ĐỘ MỜ NHÒE (MOTION BLUR) THEO TỐC ĐỘ CHUỘT
+            // Vẩy chuột càng nhanh thì pixel blur càng lớn (giới hạn tối đa nhòe 6px)
+            const blurAmount = Math.min(speed / 12, 6); 
+
+            // Cập nhật vị trí và áp bộ lọc Blur thời gian thực cho con trỏ dấu chấm
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scaleX(${stretch})`;
+            cursor.style.filter = `blur(${blurAmount}px)`;
 
-            // 2. Cập nhật luồng ánh sáng bám đuổi mượt mà (Delay 0.1s xử lý trực tiếp từ CSS transition)
+            // Cập nhật vị trí và áp bộ lọc Blur cộng dồn cho luồng ánh sáng (Delay 0.1s từ CSS xử lý)
             light.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scaleX(${stretch * 1.05})`;
+            light.style.filter = `blur(${blurAmount * 0.5}px)`;
 
             lastX = mouseX;
             lastY = mouseY;
+
+            // Xóa hiệu ứng nhòe ngay lập tức khi chuột dừng lại không di chuyển nữa
+            clearTimeout(blurTimeout);
+            blurTimeout = setTimeout(() => {
+                cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) scaleX(1)`;
+                cursor.style.filter = 'blur(0px)';
+                light.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) scaleX(1)`;
+                light.style.filter = 'blur(0px)';
+            }, 50);
 
             // 3. Xử lý tiệm cận nút bấm
             items.forEach(item => {
@@ -245,12 +260,6 @@
                     item.classList.remove('near');
                 }
             });
-        });
-
-        // Tự động reset hình tròn khi chuột dừng di chuyển đột ngột
-        document.addEventListener('pointerup', () => {
-            cursor.style.transform = `translate3d(${lastX}px, ${lastY}px, 0) translate(-50%, -50%) scaleX(1)`;
-            light.style.transform = `translate3d(${lastX}px, ${lastY}px, 0) translate(-50%, -50%) scaleX(1)`;
         });
 
         document.addEventListener('mouseleave', () => {
