@@ -15,62 +15,63 @@
             padding: 0;
         }
 
-        /* Ẩn con trỏ chuột mặc định của hệ điều hành trên toàn bộ trang web */
+        /* Ẩn con trỏ chuột mặc định */
         html, body, a, button {
             cursor: none !important;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #0D0E11; /* Nền tối xám sâu */
+            background: #0D0E11;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #E5E7EB;
             padding: 20px;
-            overflow: hidden; /* Tránh tràn trang khi luồng sáng di chuyển rộng */
+            overflow: hidden;
             position: relative;
         }
 
         /* 
-           HIỆU ỨNG LUỒNG ÁNH SÁNG (SPOTLIGHT):
-           Tạo một dải sáng hình tròn mờ ảo chiếu từ dưới nền 
+           LUỒNG ÁNH SÁNG THEO CHUỘT (SPOTLIGHT) 
+           Tối ưu bằng translate3d + transition 0.1s siêu mượt, hỗ trợ motion blur khi vẩy nhanh
         */
         .mouse-light {
             position: fixed;
             top: 0;
             left: 0;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 40%, transparent 70%);
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 50%, transparent 75%);
             border-radius: 50%;
-            pointer-events: none; /* Không cản trở việc click */
-            transform: translate(-50%, -50%);
+            pointer-events: none;
             z-index: 1;
-            will-change: left, top;
-            /* Thêm transition nhẹ để luồng sáng di chuyển mượt mà, có độ trễ nhẹ tạo cảm giác nghệ thuật */
-            transition: left 0.1s cubic-bezier(0.25, 1, 0.5, 1), top 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+            /* Điểm mấu chốt: Khóa tâm và bật tăng tốc phần cứng */
+            transform: translate3d(-50%, -50%, 0);
+            will-change: transform;
+            /* Delay chuẩn 0.1s mượt mà, không bị lag giật nhảy vị trí */
+            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* 
-           CON TRỎ CHUỘT DẠNG DẤU CHẤM:
-        */
+        /* CON TRỎ CHUỘT DẤU CHẤM CÓ MOTION BLUR */
         .custom-cursor {
             position: fixed;
             top: 0;
             left: 0;
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             background-color: #FFFFFF;
             border-radius: 50%;
             pointer-events: none;
-            transform: translate(-50%, -50%);
-            z-index: 9999; /* Luôn nằm trên cùng mọi phần tử */
-            will-change: left, top;
+            z-index: 9999;
+            transform: translate3d(-50%, -50%, 0);
+            will-change: transform;
+            /* Phản hồi tức thì nhưng mượt để tạo vệt dãn khi di chuyển nhanh */
+            transition: transform 0.05s ease-out;
         }
 
-        /* Khung chứa nội dung màu xám tối phối với viền tinh tế */
+        /* Khung chứa nội dung màu xám tối phối viền tinh tế */
         .profile-card {
             background: #16171C;
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -81,7 +82,7 @@
             text-align: center;
             box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
             position: relative;
-            z-index: 2; /* Nằm trên lớp luồng sáng */
+            z-index: 2;
         }
 
         .avatar-wrapper {
@@ -146,7 +147,6 @@
             border: 1px solid rgba(255, 255, 255, 0.03);
             
             transform: translate3d(0, 0, 0); 
-            -webkit-transform: translate3d(0, 0, 0);
             will-change: transform, backdrop-filter, background-color; 
 
             transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -174,7 +174,7 @@
 </head>
 <body>
 
-    <!-- Hai phần tử tùy biến cho con trỏ và ánh sáng -->
+    <!-- Các lớp ánh sáng và con trỏ -->
     <div class="mouse-light" id="mouseLight"></div>
     <div class="custom-cursor" id="customCursor"></div>
 
@@ -203,28 +203,41 @@
         const items = document.querySelectorAll('.link-item');
         const triggerDistance = 75;
 
+        let lastX = 0;
+        let lastY = 0;
+
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
             const mouseY = e.clientY;
 
-            // 1. Cập nhật vị trí dấu chấm chuột (Phản hồi tức thì 0ms)
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
+            // Thuật toán đo tốc độ chuột để kích hoạt hiệu ứng Motion Blur vật lý
+            const deltaX = mouseX - lastX;
+            const deltaY = mouseY - lastY;
+            const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            // Tính góc di chuyển của chuột
+            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            // Ép độ dãn (scale) dựa trên tốc độ vẩy chuột, giới hạn tối đa dãn gấp 2.5 lần
+            const stretch = Math.min(1 + speed / 40, 2.5); 
 
-            // 2. Cập nhật vị trí luồng ánh sáng (Có độ trễ mượt từ CSS chuyển động theo)
-            light.style.left = mouseX + 'px';
-            light.style.top = mouseY + 'px';
+            // 1. Cập nhật vị trí dấu chấm chuột kèm hiệu ứng co dãn Motion Blur theo hướng đi
+            cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scaleX(${stretch})`;
 
-            // 3. Đo khoảng cách xử lý hiệu ứng tiệm cận của các nút bấm
+            // 2. Cập nhật luồng ánh sáng bám đuổi mượt mà (Delay 0.1s xử lý trực tiếp từ CSS transition)
+            light.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scaleX(${stretch * 1.05})`;
+
+            lastX = mouseX;
+            lastY = mouseY;
+
+            // 3. Xử lý tiệm cận nút bấm
             items.forEach(item => {
                 const rect = item.getBoundingClientRect();
-                
                 const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
                 const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
-                
-                const distanceX = mouseX - closestX;
-                const distanceY = mouseY - closestY;
-                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                const dX = mouseX - closestX;
+                const dY = mouseY - closestY;
+                const distance = Math.sqrt(dX * dX + dY * dY);
 
                 if (distance < triggerDistance) {
                     item.classList.add('near');
@@ -234,7 +247,12 @@
             });
         });
 
-        // Ẩn dấu chấm chuột khi người dùng di chuyển ra ngoài cửa sổ trình duyệt
+        // Tự động reset hình tròn khi chuột dừng di chuyển đột ngột
+        document.addEventListener('pointerup', () => {
+            cursor.style.transform = `translate3d(${lastX}px, ${lastY}px, 0) translate(-50%, -50%) scaleX(1)`;
+            light.style.transform = `translate3d(${lastX}px, ${lastY}px, 0) translate(-50%, -50%) scaleX(1)`;
+        });
+
         document.addEventListener('mouseleave', () => {
             cursor.style.opacity = '0';
             light.style.opacity = '0';
