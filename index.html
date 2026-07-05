@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #080B11; /* Đổi sang nền tối tĩnh để mượt 100% */
+            background: #080B11;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* Khung chứa nội dung loại bỏ blur để tối ưu phần cứng */
         .profile-card {
             background: #111827;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -39,7 +38,6 @@
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
-        /* Ảnh đại diện tối giản */
         .avatar-wrapper {
             position: relative;
             width: 110px;
@@ -55,7 +53,6 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Điểm xanh hiển thị trạng thái trực tuyến */
         .status-dot {
             position: absolute;
             bottom: 5px;
@@ -67,14 +64,11 @@
             border-radius: 50%;
         }
 
-        /* Chữ thienan0212 To, Đậm, Phông Đẹp */
         .username {
             font-size: 36px;
             font-weight: 800;
             letter-spacing: -1px;
-            background: linear-gradient(135deg, #FFFFFF 30%, #9CA3AF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #FFFFFF; /* Đổi sang màu solid thuần để mượt hơn gradient khi render nhanh */
             margin-bottom: 8px;
         }
 
@@ -86,14 +80,16 @@
             letter-spacing: 0.5px;
         }
 
-        /* Khu vực các nút liên kết */
         .links-container {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
 
-        /* Tối ưu hiệu ứng chuyển động mượt mà bằng cubic-bezier và dùng hardware acceleration */
+        /* 
+           BẢN NÂNG CẤP SIÊU MƯỢT: 
+           Ép GPU luôn chạy và phản hồi hoạt họa ngay lập tức kể cả khi lướt chuột nhanh
+        */
         .link-item {
             display: flex;
             align-items: center;
@@ -106,39 +102,47 @@
             font-size: 15px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transform: translateZ(0); /* Kích hoạt tăng tốc phần cứng GPU */
-            transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), 
-                        background-color 0.25s ease, 
-                        border-color 0.25s ease, 
-                        box-shadow 0.25s ease;
+            
+            /* Kích hoạt tăng tốc phần cứng 3D lập tức */
+            transform: translate3d(0, 0, 0); 
+            -webkit-transform: translate3d(0, 0, 0);
+            
+            /* Báo trước cho trình duyệt chuẩn bị tài nguyên thay đổi */
+            will-change: transform, background-color, border-color, box-shadow; 
+            
+            /* Thời gian phản hồi nhanh hơn (0.18s) giúp nhận diện di chuột tức thì */
+            transition: transform 0.18s cubic-bezier(0.215, 0.610, 0.355, 1), 
+                        background-color 0.18s linear, 
+                        border-color 0.18s linear, 
+                        box-shadow 0.18s linear;
         }
 
-        /* Hiệu ứng di chuột đổi màu theo thương hiệu cực kỳ mềm mại */
+        /* Hiệu ứng Hover phản hồi lập tức */
         .link-item.gmail:hover {
-            background: #EA4335;
+            background-color: #EA4335;
             border-color: #EA4335;
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0);
             box-shadow: 0 10px 20px rgba(234, 67, 53, 0.25);
         }
 
         .link-item.youtube:hover {
-            background: #FF0000;
+            background-color: #FF0000;
             border-color: #FF0000;
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0);
             box-shadow: 0 10px 20px rgba(255, 0, 0, 0.25);
         }
 
         .link-item.tiktok:hover {
-            background: #010101;
+            background-color: #010101;
             border-color: #25F4EE;
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0);
             box-shadow: 0 10px 20px rgba(37, 244, 238, 0.15);
         }
 
         .link-item.discord:hover {
-            background: #5865F2;
+            background-color: #5865F2;
             border-color: #5865F2;
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0);
             box-shadow: 0 10px 20px rgba(88, 101, 242, 0.25);
         }
 
@@ -149,7 +153,7 @@
         .link-item.discord-team:hover {
             background: linear-gradient(135deg, #5865F2, #7289DA);
             border-color: #5865F2;
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0);
             box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
         }
     </style>
@@ -158,30 +162,19 @@
 
     <div class="profile-card">
         <div class="avatar-wrapper">
-            <!-- Thay đường link ảnh chân dung của bạn vào đây -->
             <img class="avatar" src="https://placeholder.com" alt="thienan0212">
             <div class="status-dot"></div>
         </div>
         
-        <!-- Tên định danh to và chuyên nghiệp -->
         <h1 class="username">thienan0212</h1>
         
         <p class="tagline">Welcome to my profile</p>
         
         <div class="links-container">
-            <!-- Nút liên kết Gmail -->
             <a href="mailto:gmail-cua-ban@gmail.com" class="link-item gmail">Gmail</a>
-            
-            <!-- Nút liên kết YouTube -->
             <a href="https://youtube.com" target="_blank" class="link-item youtube">YouTube</a>
-
-            <!-- Nút liên kết TikTok -->
             <a href="https://tiktok.com" target="_blank" class="link-item tiktok">TikTok</a>
-            
-            <!-- Nút liên kết Discord Cá Nhân -->
             <a href="https://discord.gg" target="_blank" class="link-item discord">Discord Cá Nhân</a>
-
-            <!-- Nút liên kết Discord Team -->
             <a href="https://discord.gg" target="_blank" class="link-item discord-team">Discord Team</a>
         </div>
     </div>
