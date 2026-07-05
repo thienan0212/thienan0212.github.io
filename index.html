@@ -17,31 +17,26 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0B0F19; /* Nền tối sang trọng */
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.3) 0, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.2) 0, transparent 50%);
+            background: #080B11; /* Đổi sang nền tối tĩnh để mượt 100% */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #F3F4F6;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* Khung chứa nội dung tinh giản kính mờ (Glassmorphism) */
+        /* Khung chứa nội dung loại bỏ blur để tối ưu phần cứng */
         .profile-card {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 40px 30px;
             width: 100%;
             max-width: 440px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
 
         /* Ảnh đại diện tối giản */
@@ -57,7 +52,7 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Điểm xanh hiển thị trạng thái trực tuyến */
@@ -68,7 +63,7 @@
             width: 16px;
             height: 16px;
             background-color: #10B981;
-            border: 3px solid #0B0F19;
+            border: 3px solid #111827;
             border-radius: 50%;
         }
 
@@ -98,6 +93,7 @@
             gap: 14px;
         }
 
+        /* Tối ưu hiệu ứng chuyển động mượt mà bằng cubic-bezier và dùng hardware acceleration */
         .link-item {
             display: flex;
             align-items: center;
@@ -108,51 +104,53 @@
             color: #FFFFFF;
             font-weight: 600;
             font-size: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateZ(0); /* Kích hoạt tăng tốc phần cứng GPU */
+            transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), 
+                        background-color 0.25s ease, 
+                        border-color 0.25s ease, 
+                        box-shadow 0.25s ease;
         }
 
-        /* Hiệu ứng di chuột đổi màu theo thương hiệu */
+        /* Hiệu ứng di chuột đổi màu theo thương hiệu cực kỳ mềm mại */
         .link-item.gmail:hover {
             background: #EA4335;
             border-color: #EA4335;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(234, 67, 53, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(234, 67, 53, 0.25);
         }
 
         .link-item.youtube:hover {
             background: #FF0000;
             border-color: #FF0000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.25);
         }
 
         .link-item.tiktok:hover {
             background: #010101;
             border-color: #25F4EE;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 244, 238, 0.2), 0 5px 15px rgba(254, 44, 85, 0.2);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(37, 244, 238, 0.15);
         }
 
         .link-item.discord:hover {
             background: #5865F2;
             border-color: #5865F2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.25);
         }
 
-        /* Nút Discord Team nổi bật với hiệu ứng gradient */
         .link-item.discord-team {
-            background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(114, 137, 218, 0.1));
-            border-color: rgba(88, 101, 242, 0.3);
+            border-color: rgba(88, 101, 242, 0.2);
         }
 
         .link-item.discord-team:hover {
             background: linear-gradient(135deg, #5865F2, #7289DA);
             border-color: #5865F2;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3);
         }
     </style>
 </head>
