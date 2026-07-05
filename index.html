@@ -17,7 +17,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #121316; /* Nền tối xám đen */
+            background: #0D0E11; /* Nền tối xám sâu */
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -29,21 +29,21 @@
 
         /* Khung chứa nội dung màu xám tối phối với viền tinh tế */
         .profile-card {
-            background: #1C1D22;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            border-radius: 24px;
-            padding: 40px 30px;
+            background: #16171C;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 28px;
+            padding: 50px 35px; /* Tăng padding để khung rộng rãi hơn */
             width: 100%;
-            max-width: 440px;
+            max-width: 460px; /* Tăng chiều rộng khung */
             text-align: center;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
         }
 
         .avatar-wrapper {
             position: relative;
-            width: 110px;
-            height: 110px;
-            margin: 0 auto 24px auto;
+            width: 120px; /* Tăng kích thước avatar */
+            height: 120px;
+            margin: 0 auto 28px auto;
         }
 
         .avatar {
@@ -54,72 +54,85 @@
             border: 2px solid rgba(255, 255, 255, 0.08);
         }
 
-        /* Đổi chấm trạng thái sang màu xám sáng hoặc xanh mint nhạt cho hợp tông xám */
         .status-dot {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
-            width: 16px;
-            height: 16px;
-            background-color: #9CA3AF; /* Xám sáng sáng */
-            border: 3px solid #1C1D22;
+            bottom: 6px;
+            right: 6px;
+            width: 18px;
+            height: 18px;
+            background-color: #9CA3AF;
+            border: 3px solid #16171C;
             border-radius: 50%;
         }
 
         .username {
-            font-size: 36px;
+            font-size: 38px; /* Tăng size chữ tên của bạn */
             font-weight: 800;
             letter-spacing: -1px;
             color: #FFFFFF;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .tagline {
-            font-size: 14px;
+            font-size: 15px;
             color: #9CA3AF;
             font-weight: 400;
-            margin-bottom: 32px;
+            margin-bottom: 38px;
             letter-spacing: 0.5px;
         }
 
         .links-container {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 18px; /* Tăng khoảng cách giữa các nút */
         }
 
-        /* Nút bấm trạng thái mặc định: Màu xám tối đồng bộ nền */
+        /* 
+           THIẾT KẾ NÚT TO HƠN & HỖ TRỢ BLUR ANIMATION:
+           Mặc định nút sẽ có một lớp kính mờ nhẹ sẵn để khi transition sang trạng thái blur không bị giật.
+        */
         .link-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 18px; /* Tăng đáng kể độ dày (padding) giúp nút TO và RỘNG hơn */
+            border-radius: 16px; /* Bo góc mềm mại hơn */
             text-decoration: none;
-            color: #9CA3AF; /* Chữ xám nhẹ mặc định */
+            color: #9CA3AF;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 16px; /* Tăng kích thước chữ trong nút */
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.03);
             
             transform: translate3d(0, 0, 0); 
             -webkit-transform: translate3d(0, 0, 0);
-            will-change: transform; 
+            will-change: transform, backdrop-filter, background-color; 
 
-            transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        background-color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease, color 0.1s ease;
+            /* Thiết lập hiệu ứng chuyển cảnh mượt mà bao gồm cả hiệu ứng làm mờ (backdrop-filter) */
+            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background-color 0.2s ease, 
+                        border-color 0.2s ease, 
+                        box-shadow 0.2s ease, 
+                        color 0.2s ease,
+                        backdrop-filter 0.2s ease,
+                        -webkit-backdrop-filter 0.2s ease;
         }
 
         /* 
-           HIỆU ỨNG TIỆM CẬN MÀU XÁM CAO CẤP:
-           Khi chuột đến gần, nút sẽ lập tức chuyển sang màu trắng/xám sáng và nhấc lên nhẹ nhàng
+           HIỆU ỨNG TIỆM CẬN NÂNG CẤP KÍNH MỜ (BLUR ANIMATION):
+           Khi chuột đến gần, nút tự động kích hoạt lớp kính mờ (blur), nền xám sáng trong suốt và nổi lên.
         */
         .link-item.near {
-            background-color: #FFFFFF !important; /* Biến thành nút trắng nổi bật */
-            border-color: #FFFFFF !important;
-            color: #121316 !important; /* Chữ chuyển thành màu tối để dễ đọc */
-            transform: translate3d(0, -4px, 0);
-            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.12);
+            background-color: rgba(255, 255, 255, 0.15) !important; /* Nền xám trắng trong suốt */
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            color: #FFFFFF !important; /* Chữ chuyển sang trắng nổi bật */
+            
+            /* Kích hoạt hiệu ứng Blur mịn màng xuyên thấu */
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            
+            transform: translate3d(0, -5px, 0); /* Nhấc nút lên cao hơn tạo độ sâu */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.03);
         }
     </style>
 </head>
@@ -144,10 +157,10 @@
         </div>
     </div>
 
-    <!-- Giữ nguyên JS nhận diện khoảng cách chuột siêu nhạy -->
+    <!-- JavaScript đo khoảng cách chuột siêu nhạy đón đầu chuyển động -->
     <script>
         const items = document.querySelectorAll('.link-item');
-        const triggerDistance = 20; // Chuột cách nút 60px là đổi màu liền
+        const triggerDistance = 75; // Tăng nhẹ phạm vi nhận diện lên 75px để hiệu ứng blur đón đầu mượt hơn nữa
 
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
