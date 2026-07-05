@@ -17,25 +17,26 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #080B11;
+            background: #121316; /* Nền tối xám đen */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #F3F4F6;
+            color: #E5E7EB;
             padding: 20px;
             overflow-x: hidden;
         }
 
+        /* Khung chứa nội dung màu xám tối phối với viền tinh tế */
         .profile-card {
-            background: #111827;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #1C1D22;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: 24px;
             padding: 40px 30px;
             width: 100%;
             max-width: 440px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
         }
 
         .avatar-wrapper {
@@ -50,17 +51,18 @@
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* Đổi chấm trạng thái sang màu xám sáng hoặc xanh mint nhạt cho hợp tông xám */
         .status-dot {
             position: absolute;
             bottom: 5px;
             right: 5px;
             width: 16px;
             height: 16px;
-            background-color: #10B981;
-            border: 3px solid #111827;
+            background-color: #9CA3AF; /* Xám sáng sáng */
+            border: 3px solid #1C1D22;
             border-radius: 50%;
         }
 
@@ -86,7 +88,7 @@
             gap: 14px;
         }
 
-        /* Trạng thái mặc định của nút */
+        /* Nút bấm trạng thái mặc định: Màu xám tối đồng bộ nền */
         .link-item {
             display: flex;
             align-items: center;
@@ -94,55 +96,30 @@
             padding: 14px;
             border-radius: 12px;
             text-decoration: none;
-            color: #FFFFFF;
+            color: #9CA3AF; /* Chữ xám nhẹ mặc định */
             font-weight: 600;
             font-size: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            
             transform: translate3d(0, 0, 0); 
-            will-change: transform, background-color, border-color, box-shadow;
-            /* Đổi sang 0.1s để màu sắc bắt kịp tốc độ chuột ngay khi đến gần */
+            -webkit-transform: translate3d(0, 0, 0);
+            will-change: transform; 
+
             transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        background-color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+                        background-color 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease, color 0.1s ease;
         }
 
         /* 
-           Các Class kích hoạt bằng JavaScript khi chuột đến gần.
-           Màu sắc sẽ tự động kích hoạt dù chuột chưa chạm vào phần tử!
+           HIỆU ỨNG TIỆM CẬN MÀU XÁM CAO CẤP:
+           Khi chuột đến gần, nút sẽ lập tức chuyển sang màu trắng/xám sáng và nhấc lên nhẹ nhàng
         */
-        .link-item.near.gmail {
-            background-color: #EA4335 !important;
-            border-color: #EA4335 !important;
-            transform: translate3d(0, -3px, 0);
-            box-shadow: 0 8px 16px rgba(234, 67, 53, 0.3);
-        }
-
-        .link-item.near.youtube {
-            background-color: #FF0000 !important;
-            border-color: #FF0000 !important;
-            transform: translate3d(0, -3px, 0);
-            box-shadow: 0 8px 16px rgba(255, 0, 0, 0.3);
-        }
-
-        .link-item.near.tiktok {
-            background-color: #010101 !important;
-            border-color: #25F4EE !important;
-            transform: translate3d(0, -3px, 0);
-            box-shadow: 0 8px 16px rgba(37, 244, 238, 0.2);
-        }
-
-        .link-item.near.discord {
-            background-color: #5865F2 !important;
-            border-color: #5865F2 !important;
-            transform: translate3d(0, -3px, 0);
-            box-shadow: 0 8px 16px rgba(88, 101, 242, 0.3);
-        }
-
-        .link-item.near.discord-team {
-            background: linear-gradient(135deg, #5865F2, #7289DA) !important;
-            border-color: #5865F2 !important;
-            transform: translate3d(0, -3px, 0);
-            box-shadow: 0 8px 16px rgba(88, 101, 242, 0.35);
+        .link-item.near {
+            background-color: #FFFFFF !important; /* Biến thành nút trắng nổi bật */
+            border-color: #FFFFFF !important;
+            color: #121316 !important; /* Chữ chuyển thành màu tối để dễ đọc */
+            transform: translate3d(0, -4px, 0);
+            box-shadow: 0 12px 24px rgba(255, 255, 255, 0.12);
         }
     </style>
 </head>
@@ -159,19 +136,18 @@
         <p class="tagline">Welcome to my profile</p>
         
         <div class="links-container">
-            <a href="mailto:gmail-cua-ban@gmail.com" class="link-item gmail">Gmail</a>
-            <a href="https://youtube.com" target="_blank" class="link-item youtube">YouTube</a>
-            <a href="https://tiktok.com" target="_blank" class="link-item tiktok">TikTok</a>
-            <a href="https://discord.gg" target="_blank" class="link-item discord">Discord Cá Nhân</a>
-            <a href="https://discord.gg" target="_blank" class="link-item discord-team">Discord Team</a>
+            <a href="mailto:gmail-cua-ban@gmail.com" class="link-item">Gmail</a>
+            <a href="https://youtube.com" target="_blank" class="link-item">YouTube</a>
+            <a href="https://tiktok.com" target="_blank" class="link-item">TikTok</a>
+            <a href="https://discord.gg" target="_blank" class="link-item">Discord Cá Nhân</a>
+            <a href="https://discord.gg" target="_blank" class="link-item">Discord Team</a>
         </div>
     </div>
 
-    <!-- Đoạn mã JavaScript xử lý khoảng cách tiệm cận của chuột -->
+    <!-- Giữ nguyên JS nhận diện khoảng cách chuột siêu nhạy -->
     <script>
         const items = document.querySelectorAll('.link-item');
-        // Khoảng cách kích hoạt (tính bằng pixel). Chuột cách nút dưới 60px là nút tự đổi màu.
-        const triggerDistance = 30; 
+        const triggerDistance = 60; // Chuột cách nút 60px là đổi màu liền
 
         document.addEventListener('mousemove', (e) => {
             const mouseX = e.clientX;
@@ -180,16 +156,13 @@
             items.forEach(item => {
                 const rect = item.getBoundingClientRect();
                 
-                // Tìm điểm gần nhất trên cạnh của nút bấm tới con trỏ chuột
                 const closestX = Math.max(rect.left, Math.min(mouseX, rect.right));
                 const closestY = Math.max(rect.top, Math.min(mouseY, rect.bottom));
                 
-                // Tính khoảng cách hình học từ chuột đến điểm đó
                 const distanceX = mouseX - closestX;
                 const distanceY = mouseY - closestY;
                 const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-                // Nếu chuột nằm trong phạm vi gần, thêm class 'near' để kích hoạt đổi màu
                 if (distance < triggerDistance) {
                     item.classList.add('near');
                 } else {
